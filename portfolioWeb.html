@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videograph | Alex Morgan Portfolio</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Lenis Smooth Scroll CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.18/dist/lenis.css">
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+    <style>
+        /* =========================================================
+           VARIABLES & RESET
+           ========================================================= */
+        :root {
+            --bg-dark: #0f0826;
+            --bg-card: #0b1120;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --accent: #00d8ff;
+            --accent-green: #10b981;
+            --font-title: 'Rajdhani', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        /* =========================================================
+        CYBER SCROLLBAR STYLES
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 216, 255, 0.4) var(--bg-dark);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+                /* Chrome, Edge, Safari & Opera Support */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 216, 255, 0.35);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 216, 255, 0.5);
+            box-shadow: inset 0 0 6px rgba(0, 216, 255, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+            border-color: #ffffff;
+            box-shadow: 0 0 12px var(--accent), 0 0 20px var(--accent);
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: var(--bg-dark);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            
+            /* Dark overlay (85% opacity) + Background Image */
+            background-image: 
+                linear-gradient(rgba(15, 8, 38, 0.764), rgba(15, 8, 38, 0.764)),
+                url('wallpaper.png'); /* Replace with your image path or URL */
+                
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Keeps background fixed while scrolling */
+            
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* =========================================================
+        FADE-UP ENTRANCE ANIMATIONS
+        ========================================================= */
+
+        /* Initial hidden state for elements */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        /* Triggered state when splash screen finishes */
+        body.splash-done .fade-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered delay classes for sequential reveal */
+        .fade-up-delay-1 { transition-delay: 0.15s; }
+        .fade-up-delay-2 { transition-delay: 0.30s; }
+        .fade-up-delay-3 { transition-delay: 0.45s; }
+        .fade-up-delay-4 { transition-delay: 0.60s; }
+
+        /* =========================================================
+        SPLASH SCREEN STYLES
+        ========================================================= */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #060a12;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                        visibility 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Background Grid / Ambient Effect */
+        .splash-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at center, rgba(0, 216, 255, 0.08) 0%, transparent 70%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            pointer-events: none;
+        }
+
+        .splash-content {
+            position: relative;
+            z-index: 2;
+            width: min(90%, 420px);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Logo Brackets */
+        .splash-logo {
+            font-family: var(--font-title, sans-serif);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .splash-bracket {
+            color: var(--accent, #00d8ff);
+            text-shadow: 0 0 12px rgba(0, 216, 255, 0.6);
+        }
+
+        /* Progress Bar Container */
+        .splash-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(0, 216, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 1px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .splash-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #0088ff, var(--accent, #00d8ff));
+            border-radius: 10px;
+            box-shadow: 0 0 12px var(--accent, #00d8ff);
+            transition: width 0.1s linear;
+        }
+
+        /* Status Text Line */
+        .splash-status {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-code, monospace);
+            font-size: 0.78rem;
+            color: var(--text-muted, #94a3b8);
+        }
+
+        .splash-text-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .splash-prompt {
+            color: var(--accent, #00d8ff);
+            font-weight: bold;
+        }
+
+        .splash-percent {
+            color: var(--accent, #00d8ff);
+            font-weight: 600;
+        }
+
+        /* Hide State Animation */
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* =========================================================
+        ENHANCED CYBER CURSOR STYLES
+        ========================================================= */
+        .cursor-dot {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 8px; 
+            height: 8px;
+            background: var(--accent); 
+            border-radius: 50%;
+            transform: translate(-50%, -50%); 
+            z-index: 10000; 
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cursor-ring {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 38px; 
+            height: 38px;
+            border: 1.5px solid rgba(0, 216, 255, 0.6); 
+            border-radius: 50%;
+            transform: translate(-50%, -50%); 
+            z-index: 9999; 
+            pointer-events: none;
+            box-shadow: inset 0 0 12px rgba(0, 216, 255, 0.2), 0 0 15px rgba(0, 216, 255, 0.25);
+            transition: width 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        height 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        border-color 0.3s ease, 
+                        background-color 0.3s ease,
+                        backdrop-filter 0.3s ease;
+        }
+
+        /* =========================================================
+        CUSTOM CURSOR OVERLAY FIX
+        ========================================================= */
+        /* Replace '.custom-cursor' or '.cursor' with your exact cursor element class/ID */
+        .cursor,
+        .custom-cursor,
+        .cursor-dot,
+        .cursor-ring,
+        .cursor-outline,
+        .cursor-ripple,
+        .cursor-particle,
+        #cursor {
+            z-index: 999999 !important; /* Forces cursor above the modal */
+            pointer-events: none !important; /* Ensures clicks pass through directly to buttons */
+        }
+
+        /* Hover State */
+        .cursor-ring.hovered {
+            width: 56px;
+            height: 56px;
+            border-color: var(--accent);
+            background: rgba(0, 216, 255, 0.12);
+            -webkit-backdrop-filter: blur(3px);
+            box-shadow: 0 0 25px rgba(0, 216, 255, 0.5), inset 0 0 15px rgba(0, 216, 255, 0.3);
+        }
+
+        .cursor-dot.hovered {
+            width: 12px;
+            height: 12px;
+            background: #ffffff;
+            box-shadow: 0 0 15px #ffffff, 0 0 25px var(--accent);
+        }
+
+        /* Click Shockwave Effect */
+        .cursor-ripple {
+            position: fixed;
+            pointer-events: none;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: ripple-out 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            z-index: 9998;
+        }
+
+        @keyframes ripple-out {
+            0% { width: 10px; height: 10px; opacity: 1; border-width: 3px; }
+            100% { width: 90px; height: 90px; opacity: 0; border-width: 1px; }
+        }
+
+        /* Cursor Particle Trail */
+        .cursor-particle {
+            position: fixed;
+            pointer-events: none;
+            background: var(--accent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 6px var(--accent);
+            animation: particle-fade 0.5s linear forwards;
+            z-index: 9997;
+        }
+
+        @keyframes particle-fade {
+            0% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.1); }
+        }
+
+        /* Navbar Layout */
+        header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 0.65rem 1.5rem; 
+            position: fixed; 
+            top: 1.25rem; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(92%, 1180px);
+            background: rgba(11, 17, 32, 0.65); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            display: flex; align-items: center;
+            font-family: var(--font-title); font-size: 1.25rem; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            text-decoration: none; color: #fff;
+            padding-left: 0.25rem;
+        }
+
+        .logo img {
+            margin-right: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent); font-size: 1.2rem;
+            filter: drop-shadow(0 0 8px rgba(0,216,255,0.6));
+        }
+
+        .nav-links { 
+            display: flex; 
+            gap: 0.5rem; 
+            list-style: none; 
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-muted); 
+            text-decoration: none;
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            letter-spacing: 1.2px; 
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            transition: all 0.25s ease;
+        }
+        .nav-links a:hover { 
+            color: #fff; 
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .nav-links a.active { 
+            color: var(--accent); 
+            background: rgba(0, 216, 255, 0.08);
+            border-color: rgba(0, 216, 255, 0.25);
+            box-shadow: 0 0 12px rgba(0, 216, 255, 0.15);
+        }
+
+        .social-icons {
+            display: flex; gap: 1rem; align-items: center;
+            border-left: 1px solid rgba(255,255,255,0.1); 
+            padding-left: 1.25rem;
+            padding-right: 0.25rem;
+        }
+        .social-icons a {
+            color: var(--text-muted); font-size: 0.85rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .social-icons a:hover { color: var(--accent); transform: translateY(-2px); }
+
+        /* Container Layout */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid; grid-template-columns: 1fr 1fr;
+            padding: 7rem 0 2rem 0;
+            min-height: 100vh;
+            align-items: center; position: relative;
+        }
+
+        .hero-content { padding-right: 5%; position: relative; z-index: 10; }
+        
+        .subtitle {
+            color: var(--text-muted); font-size: 0.85rem;
+            letter-spacing: 4px; text-transform: uppercase;
+            margin-bottom: 1.5rem; display: block;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        .hero-title {
+            font-family: var(--font-title); font-size: clamp(2.8rem, 5.5vw, 5rem);
+            font-weight: 700; line-height: 1.05; text-transform: uppercase;
+            margin-bottom: 1rem; text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .btn-bracket {
+            display: inline-block; 
+            margin-top: 4rem;
+            padding: 18px 35px;
+            color: var(--text-main); 
+            text-decoration: none;
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            letter-spacing: 2px;
+            position: relative; 
+            transition: all 0.3s ease;
+            background: rgba(15, 8, 38, 0.4); 
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+        .btn-bracket::before, .btn-bracket::after {
+            content: ''; position: absolute; width: 15px; height: 15px;
+            border-color: var(--accent); border-style: solid;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-bracket::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .btn-bracket::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+        .btn-bracket:hover { background: rgba(0, 216, 255, 0.1); color: var(--accent); }
+        .btn-bracket:hover::before, .btn-bracket:hover::after { width: 100%; height: 100%; filter: drop-shadow(0 0 5px var(--accent)); }
+
+        /* Pagination Styles */
+        .hero-pagination {
+            display: flex; 
+            gap: 2rem; 
+            margin-top: 1rem;
+            font-family: var(--font-title);
+            font-size: 1.2rem; 
+            font-weight: 600; 
+            color: var(--text-muted);
+        }
+        .hero-pagination span { 
+            position: relative; padding-bottom: 5px;
+            transition: color 0.3s ease; 
+        }
+        .hero-pagination span.active { color: var(--text-main); }
+        .hero-pagination span::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0%; height: 2px; background: var(--text-main);
+            transition: width 0.3s ease;
+        }
+        .hero-pagination span.active::after { width: 100%; }
+
+        /* Terminal Card */
+        .hero-image-wrapper {
+            position: relative; width: 100%; display: flex;
+            justify-content: flex-end; align-items: center; perspective: 1000px;
+        }
+
+        .terminal-card {
+            width: 100%; max-width: 620px;
+            background: #0b1120; border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            overflow: hidden; font-family: var(--font-code);
+            transition: transform 0.1s ease-out, opacity 0.4s ease;
+        }
+
+        .terminal-header {
+            display: flex; align-items: center; padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        .terminal-dots { display: flex; gap: 8px; }
+        .terminal-dots .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dots .close { background: #ff5f56; }
+        .terminal-dots .minimize { background: #ffbd2e; }
+        .terminal-dots .expand { background: #27c93f; }
+
+        .terminal-title {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            color: #64748b; font-size: 0.82rem; font-weight: 500;
+        }
+
+        .terminal-body {
+            padding: 24px; display: flex; flex-direction: column;
+            gap: 16px; font-size: 0.92rem; line-height: 1.6;
+        }
+        .terminal-group { display: flex; flex-direction: column; gap: 4px; }
+        .terminal-command { color: #f8fafc; font-weight: 600; }
+        .terminal-command .prompt { color: #38bdf8; margin-right: 8px; font-weight: 700; }
+        .terminal-response { color: #94a3b8; padding-left: 18px; }
+        .terminal-response.philosophy { color: #cbd5e1; font-style: italic; }
+        
+        .terminal-status {
+            color: var(--accent-green); display: flex; align-items: center;
+            gap: 10px; margin-top: 8px; font-size: 0.88rem;
+        }
+        .terminal-divider { height: 1px; background: rgba(255, 255, 255, 0.08); margin: 8px 0 4px 0; }
+
+        .terminal-input-line { display: flex; align-items: center; gap: 10px; }
+        .terminal-input-line .prompt { color: #38bdf8; font-weight: 700; }
+        .terminal-input {
+            background: transparent; border: none; outline: none;
+            color: #f8fafc; font-family: inherit; font-size: 0.92rem; width: 100%;
+        }
+
+        /* Section Styling with Fixed Navbar Offset */
+        section { 
+            padding: 6rem 0; 
+            scroll-margin-top: 5rem;
+        }
+        .section-tag {
+            font-family: var(--font-code); color: var(--accent);
+            font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 0.5rem; display: block;
+        }
+        .section-title {
+            font-family: var(--font-title); font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;
+        }
+
+        /* About Section Layout */
+        .about-hero { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: center; }
+        .about-bio p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px; padding: 1.5rem; text-align: center;
+        }
+        .stat-card .number { font-family: var(--font-title); font-size: 2.5rem; font-weight: 700; color: var(--accent); }
+        .stat-card .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-top: 0.25rem; }
+
+        /* =========================================================
+        COMPACT PROJECT CARDS & GRID
+        ========================================================= */
+        .projects-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 1.25rem; /* Reduced from 2rem */
+        }
+
+        .project-card {
+            background: rgba(11, 17, 32, 0.75); 
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 12px; 
+            overflow: hidden;
+            display: flex; 
+            flex-direction: column; 
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .project-card:hover { 
+            transform: translateY(-4px); 
+            border-color: rgba(0, 216, 255, 0.35); 
+        }
+
+        /* Compact Banner Image Header */
+        .project-image {
+            height: 90px; /* Reduced from 160px */
+            background: linear-gradient(135deg, rgba(0, 216, 255, 0.08), rgba(16, 185, 129, 0.08));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative;
+        }
+
+        .project-icon { 
+            font-size: 2rem; /* Reduced from 3rem */
+            color: var(--accent); 
+            opacity: 0.85; 
+        }
+
+        .project-badge {
+            position: absolute; 
+            top: 6.5rem; 
+            right: 0.65rem; 
+            font-family: var(--font-code);
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green); 
+            border: 1px solid rgba(16, 185, 129, 0.3); 
+            padding: 2px 7px; 
+            border-radius: 4px;
+        }
+
+        /* Compact Content Container */
+        .project-content { 
+            padding: 1.15rem; /* Reduced from 1.75rem */
+            display: flex; 
+            flex-direction: column; 
+            flex-grow: 1; 
+        }
+
+        .project-content h3 { 
+            font-family: var(--font-title); 
+            font-size: 1.2rem; /* Reduced from 1.4rem */
+            margin-top: 2rem;
+            margin-bottom: 0.2rem; 
+            color: #fff; 
+        }
+
+        .project-content .company-sub { 
+            font-family: var(--font-code); 
+            font-size: 0.78rem; 
+            color: var(--accent); 
+            margin-bottom: 0.6rem; 
+        }
+
+        .project-content p { 
+            color: var(--text-muted); 
+            font-size: 0.85rem; 
+            line-height: 1.45; 
+        }
+
+        .project-content ul { 
+            color: var(--text-muted); 
+            font-size: 0.85rem; 
+            margin-left: 1rem; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+        }
+
+        /* Streamlined Tags & Buttons */
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 0.85rem !important;
+        }
+
+        .tag {
+            font-family: var(--font-code);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .btn-project {
+            padding: 6px 12px;
+            font-size: 0.72rem;
+            font-family: var(--font-code);
+            text-decoration: none; 
+            color: var(--text-muted); 
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 5px; 
+            transition: all 0.25s ease;
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px;
+        }
+
+        .btn-project:hover { 
+            color: #fff; 
+            border-color: rgba(255, 255, 255, 0.3); 
+            background: rgba(255, 255, 255, 0.08); 
+        }
+
+        .btn-project.primary { 
+            color: var(--accent); 
+            background: rgba(0, 216, 255, 0.08); 
+            border-color: rgba(0, 216, 255, 0.25); 
+        }
+
+        .btn-project.primary:hover { 
+            background: rgba(0, 216, 255, 0.2); 
+            border-color: var(--accent); 
+            color: #fff; 
+            box-shadow: 0 0 10px rgba(0, 216, 255, 0.3); 
+        }
+
+        /* Skills Cards */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .skill-card {
+            background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px; padding: 2rem; transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .skill-card:hover { transform: translateY(-5px); border-color: rgba(0, 216, 255, 0.3); }
+        .skill-icon { font-size: 2rem; color: var(--accent); margin-bottom: 1.25rem; }
+        .skill-card h3 { font-family: var(--font-title); font-size: 1.4rem; margin-bottom: 0.75rem; }
+        .skill-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag {
+            font-family: var(--font-code); font-size: 0.75rem;
+            background: rgba(0, 216, 255, 0.08); color: var(--accent);
+            padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(0, 216, 255, 0.2);
+        }
+
+        /* Timeline */
+        .timeline-container {
+            background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px; padding: 2.5rem; font-family: var(--font-code);
+        }
+        .timeline-item { position: relative; padding-left: 2rem; border-left: 2px solid rgba(0, 216, 255, 0.2); padding-bottom: 2.5rem; }
+        .timeline-item:last-child { padding-bottom: 0; border-left-color: transparent; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -7px; top: 0;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--accent); box-shadow: 0 0 10px var(--accent);
+        }
+        .timeline-date { color: var(--accent-green); font-size: 0.85rem; margin-bottom: 0.25rem; }
+        .timeline-role { font-size: 1.1rem; color: #fff; font-weight: 600; }
+        .timeline-company { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .timeline-desc { font-family: var(--font-body); color: #cbd5e1; font-size: 0.95rem; }
+
+        /* =========================================================
+        STYLISH CONTACT SECTION
+        ========================================================= */
+        .cta-box {
+            background: rgba(11, 17, 32, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 216, 255, 0.2);
+            border-radius: 24px;
+            padding: 4rem 2.5rem;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle background accent glow behind CTA */
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 216, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .cta-subtitle {
+            color: var(--text-muted);
+            max-width: 580px;
+            margin: 0 auto 2rem auto;
+            font-size: 0.95rem;
+        }
+
+        /* Contact Grid Layout */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3.5rem;
+        }
+
+        /* Contact Glass Card */
+        .contact-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            text-decoration: none;
+            text-align: left;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card:hover {
+            background: rgba(0, 216, 255, 0.06);
+            border-color: rgba(0, 216, 255, 0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 216, 255, 0.15);
+        }
+
+        /* Icon Badge */
+        .contact-card .icon-wrapper {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            background: rgba(0, 216, 255, 0.08);
+            border: 1px solid rgba(0, 216, 255, 0.25);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card .icon-wrapper i {
+            font-size: 1.3rem;
+            color: var(--accent);
+            filter: drop-shadow(0 0 6px rgba(0, 216, 255, 0.6));
+        }
+
+        .contact-card:hover .icon-wrapper {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .contact-card:hover .icon-wrapper i {
+            color: #0f0826;
+            filter: none;
+        }
+
+        /* Text Formatting */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        .contact-info .label {
+            font-family: var(--font-code);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .contact-info .value {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: color 0.25s ease;
+        }
+
+        .contact-card:hover .value {
+            color: var(--accent);
+        }
+
+        @media (max-width: 1024px) {
+            header { width: 95%; top: 0.8rem; padding: 0.5rem 1rem; }
+            .hero { grid-template-columns: 1fr; gap: 3rem; padding-top: 6rem; }
+            .hero-content { padding-right: 0; text-align: center; }
+            .nav-links, .social-icons { display: none; }
+            .hero-pagination { justify-content: center; margin-top: 2.5rem; }
+            .hero-image-wrapper { justify-content: center; }
+            .about-hero { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        /* =========================================================
+        PROJECT DETAILS MODAL & ENLARGED SLIDER STYLING
+        ========================================================= */
+        .btn-details {
+            cursor: pointer;
+            background: rgba(0, 216, 255, 0.05);
+            border: 1px solid rgba(0, 216, 255, 0.25);
+            color: var(--accent);
+            transition: all 0.25s ease;
+        }
+
+        .btn-details:hover {
+            background: rgba(0, 216, 255, 0.2);
+            border-color: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(0, 216, 255, 0.3);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 17, 32, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .modal-container {
+            position: relative;
+            background: rgba(11, 17, 32, 0.96);
+            border: 1px solid rgba(0, 216, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 216, 255, 0.2);
+            border-radius: 18px;
+            width: min(94%, 1020px); /* Expanded modal width */
+            max-height: 100vh;
+            overflow-y: auto;
+            padding: 2.25rem;
+            z-index: 10001;
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            scrollbar-width: thin;
+        }
+
+        .modal.active .modal-container {
+            transform: scale(1) translateY(0);
+        }
+
+        /* 2-COLUMN GRID - EQUAL SPLIT FOR BIGGER SCREENSHOT AREA */
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 50/50 split gives slider maximum room */
+            gap: 2rem;
+            align-items: center;
+        }
+
+        @media (max-width: 880px) {
+            .modal-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        .modal-details-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+            background: rgba(255, 95, 86, 0.25);
+            border-color: #ff5f56;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-title);
+            font-size: 1.65rem;
+            color: #fff;
+            margin: 0.5rem 0 0.25rem 0;
+        }
+
+        .modal-subheading {
+            font-family: var(--font-code);
+            font-size: 0.78rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            margin: 1.25rem 0 0.5rem 0;
+        }
+
+        .modal-body p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .modal-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-list li {
+            color: #cbd5e1;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .modal-footer {
+            margin-top: 1.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        /* BIGGER & PERFECTLY CENTERED IMAGE SLIDER */
+        .modal-slider-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .slider-display {
+            position: relative;
+            width: 100%;
+            height: 380px; /* Increased height for bigger display */
+            background: #04070d; /* Dark background to highlight screenshots */
+            border: 1px solid rgba(0, 216, 255, 0.25);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center; /* Vertical Center */
+            justify-content: center; /* Horizontal Center */
+            padding: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .slider-display img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain; /* Full image visible, uncropped & centered */
+            display: block;
+            margin: auto;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            border-radius: 6px;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            background: rgba(11, 17, 32, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 216, 255, 0.35);
+            border-radius: 50%;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.25s ease;
+        }
+
+        .slider-btn.prev { left: 12px; }
+        .slider-btn.next { right: 12px; }
+
+        .slider-btn:hover {
+            background: var(--accent);
+            color: #0b1120;
+            box-shadow: 0 0 14px var(--accent);
+        }
+
+        .slider-counter {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(4, 7, 13, 0.85);
+            border: 1px solid rgba(0, 216, 255, 0.2);
+            color: var(--accent);
+            font-family: var(--font-code);
+            font-size: 0.72rem;
+            padding: 3px 10px;
+            border-radius: 6px;
+            z-index: 5;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .slider-dot.active {
+            width: 24px;
+            border-radius: 10px;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =========================================================
+     SPLASH SCREEN / PRELOADER
+     ========================================================= -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-overlay"></div>
+        <div class="splash-content">
+            <!-- Logo / Branding -->
+            <div class="splash-logo">
+                <span class="splash-bracket">&lt;</span>
+                <span class="splash-title">PORTFOLIO</span>
+                <span class="splash-bracket">/&gt;</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="splash-bar-container">
+                <div id="splash-progress" class="splash-progress"></div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="splash-status">
+                <div class="splash-text-group">
+                    <span class="splash-prompt">$</span>
+                    <span id="splash-status-text">INITIALIZING_SYSTEM...</span>
+                </div>
+                <span id="splash-percent" class="splash-percent">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor System -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <!-- Floating Navbar -->
+    <header>
+        <a href="#home" class="logo interactable fade-up fade-up-delay-1">
+            <img src="hazLogo.png" style="width: 40px; height: 40px;"> Mr. <span style="color: var(--accent);">Haz</span>_Loper
+        </a>
+        <ul class="nav-links fade-up fade-up-delay-2">
+            <li><a href="#home" class="active interactable">HOME</a></li>
+            <li><a href="#about" class="interactable">ABOUT</a></li>
+            <li><a href="#experience" class="interactable">EXPERIENCE</a></li>
+            <li><a href="#projects" class="interactable">PROJECTS</a></li>
+            <li><a href="#skills" class="interactable">SKILLS</a></li>
+            <li><a href="#education" class="interactable">EDUCATION</a></li>
+            <li><a href="#contact" class="interactable">CONTACT</a></li>
+        </ul>
+        <div class="social-icons fade-up fade-up-delay-3">
+            <a href="https://github.com/haz-pqh" target="_blank" rel="noopener" class="interactable" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/mr-haz-480b05260/?skipRedirect=true" target="_blank" rel="noopener" class="interactable" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/mrhaz_/" target="_blank" rel="noopener" class="interactable" title="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+    </header>
+
+    <main class="container fade-up fade-up-delay-4">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <span class="subtitle" id="hero-subtitle">IT Student & Developer</span>
+                <h1 class="hero-title" id="hero-title">Muhammad<br>Hazril</h1>
+                <a href="#about" class="btn-bracket interactable">EXPLORE PROFILE</a>
+                
+                <div class="hero-pagination">
+                    <span class="active interactable" data-slide="0">01</span>
+                    <span class="interactable" data-slide="1">02</span>
+                    <span class="interactable" data-slide="2">03</span>
+                </div>
+            </div>
+
+            <div class="hero-image-wrapper">
+                <div class="terminal-card" id="parallax-img">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot close"></span>
+                            <span class="dot minimize"></span>
+                            <span class="dot expand"></span>
+                        </div>
+                        <div class="terminal-title">hazril@uptm ~ profile.sh</div>
+                    </div>
+
+                    <div class="terminal-body" id="terminal-body">
+                        <!-- Dynamic terminal output -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-hero" id="about">
+            <div class="about-bio">
+                <span class="section-tag">// PROFILE SUMMARY</span>
+                <h2 class="section-title">Motivated & Adaptable IT Graduate</h2>
+                <p>I am an IT graduate with a Diploma in Computer Sciences (GPA: 3.5) and hands-on experience as a Web & Multimedia Developer Intern under the FCOM faculty at Universiti Poly-Tech Malaysia (UPTM).</p>
+                <p>Currently pursuing a Bachelor's Degree Information Technology (Honours) in Computer Application Development at UPTM. Available for part-time or full-time employment over the next 4–5 months, ready to apply strong adaptability, quick learning, and work ethic in a professional environment.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">3.50</div>
+                        <div class="label">Diploma GPA</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">4-5 M</div>
+                        <div class="label">Availability</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">100%</div>
+                        <div class="label">Adaptability</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terminal-container" style="padding: 1.8rem;">
+                <div style="color: var(--accent); font-size: 0.8rem; margin-bottom: 1.0rem;">$ cat professional_objective.txt</div>
+                <blockquote style="color: #cbd5e1; font-style: italic; border-left: 2px solid var(--accent); padding-left: 1rem; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                    "Eager to gain new experience in a dynamic tech environment, contributing effectively while expanding skills across web development, multimedia design, and application systems."
+                </blockquote>
+                <div style="color: var(--accent-green); font-size: 0.8rem;">
+                    ▶ Status: Available for Employment (4-5 Months)
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Work / Experience Section -->
+        <section id="experience">
+            <span class="section-tag">// WORK HISTORY</span>
+            <h2 class="section-title">Professional Experience</h2>
+
+            <div class="projects-grid">
+                <!-- Internship Role -->
+                <div class="project-card interactable">
+                    <div class="project-image">
+                        <i class="fas fa-code-branch project-icon"></i>
+                        <span class="project-badge">Internship</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>Web & Multimedia Developer</h3>
+                        <div class="company-sub">Faculty of Computing & Multimedia (FCOM), UPTM | 2024</div>
+                        <ul>
+                            <li>Designed, developed, and deployed the official FCOM website with responsive, user-friendly layouts.</li>
+                            <li>Created and optimized multimedia content including graphics, videos, and animations.</li>
+                            <li>Collaborated with faculty staff to gather site requirements and implement continuous updates.</li>
+                            <li>Ensured strict brand consistency across all digital pages and promotional materials.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Operations Role -->
+                <div class="project-card interactable">
+                    <div class="project-image">
+                        <i class="fas fa-tasks project-icon"></i>
+                        <span class="project-badge">Management</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>Stall Manager</h3>
+                        <div class="company-sub">Babah Kitchen Sdn Bhd | Aug 2025 - Dec 2025</div>
+                        <ul>
+                            <li>Managed daily stall operations, inventory tracking, and stock reordering with near-zero food spoilage.</li>
+                            <li>Optimized order preparation workflows to accelerate fulfillment during high-volume peak hours.</li>
+                            <li>Handled customer feedback professionally, fostering repeat patronage and building regular customer rapport.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS SHOWCASE SECTION -->
+        <section id="projects">
+            <span class="section-tag">// PORTFOLIO & SHOWCASE</span>
+            <h2 class="section-title">Projects Showcase</h2>
+
+            <div class="projects-grid">
+                <!-- Project 1 (Official FCOM Faculty Website) -->
+                <div class="project-card interactable">
+                    <div class="project-image">
+                        <img src="fcomWeb.png" alt="FCOM Website" style="width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <span class="project-badge">Live Production</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>Official FCOM Faculty Website</h3>
+                        <div class="company-sub">Web & Multimedia Engineering</div>
+                        <p>Developed a modern and responsive website for the Faculty of Computing and Multimedia (FCOM), featuring a clean user interface, intuitive navigation, and mobile-friendly design. The website provides easy access to faculty information, academic programmes, news, events, and contact details while emphasizing usability, performance, and a professional user experience.</p>
+                        
+                        <!-- <div class="tech-tags" style="margin-top: 1rem;">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">PHP</span>
+                            <span class="tag">Font Awesome (v6.6.0)</span>
+                            <span class="tag">Google Fonts</span>
+                        </div> -->
+
+                        <div style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <!-- <a href="https://fcom.uptm.edu.my/" target="_blank" rel="noopener" class="btn-project primary interactable"><i class="fas fa-external-link-alt"></i> Live Site</a> -->
+                            <button type="button" class="btn-project btn-details interactable" data-project="0"><i class="fas fa-info-circle"></i> Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 (Hemzal Staff Portal) -->
+                <div class="project-card interactable">
+                    <div class="project-image">
+                        <img src="hemzalTumnel.png" alt="Hemzal Staff Portal" style="width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <span class="project-badge">Employee Attendance Tracking</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>Hemzal Staff Portal</h3>
+                        <div class="company-sub">Full-Stack Application</div>
+                        <p>The Hemzal Staff Portal (also styled as the Hemzal Crispy Internal Staff Portal) is a mobile-first workforce management and daily operations web application built for employees and administrators.</p>
+                        
+                        <!-- <div class="tech-tags" style="margin-top: 1rem;">
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                            <span class="tag">Vanilla JavaScript</span>
+                            <span class="tag">Firebase JS SDK</span>
+                            <span class="tag">Chart.js</span>
+                            <span class="tag">SheetJS</span>
+                            <span class="tag">jsPDF & AutoTable</span>
+                        </div> -->
+
+                        <div style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <!-- <a href="https://hemzalstaffportal.vercel.app/" target="_blank" rel="noopener" class="btn-project primary interactable"><i class="fas fa-laptop-code"></i> Staff Role</a> -->
+                            <!-- <a href="https://hemzal-staff-management-system.vercel.app/" target="_blank" rel="noopener" class="btn-project primary interactable"><i class="fas fa-user-shield"></i> Admin Role</a> -->
+                            <button type="button" class="btn-project btn-details interactable" data-project="1"><i class="fas fa-info-circle"></i> Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 (Staff CV Generator) -->
+                <div class="project-card interactable">
+                    <div class="project-image">
+                        <i class="fas fa-graduation-cap project-icon"></i>
+                        <span class="project-badge">Academic Project</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>Staff CV Generator</h3>
+                        <div class="company-sub">Computer Application Development</div>
+                        <p>Developed a responsive web-based Staff CV Generator that allows users to create professional CVs through an intuitive form interface. The application automatically formats user information into a polished resume layout, making CV creation fast, simple, and user-friendly.</p>
+                        
+                        <!-- <div class="tech-tags" style="margin-top: 1rem;">
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">REST API</span>
+                            <span class="tag">Tailwind</span>
+                            <span class="tag">Database Design</span>
+                        </div> -->
+
+                        <div style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <!-- <a href="#" class="btn-project primary interactable"><i class="fas fa-external-link-alt"></i> View Project</a> -->
+                            <!-- <a href="#" class="btn-project interactable"><i class="fab fa-github"></i> Repository</a> -->
+                            <button type="button" class="btn-project btn-details interactable" data-project="2"><i class="fas fa-info-circle"></i> Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 (Faculty Digital Media) -->
+                <div class="project-card interactable">
+                    <div class="project-image">
+                        <img src="CVSS3.png" alt="FCOM Multimedia Suite" style="width: 100%; height: 100%; object-fit: cover; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                        <span class="project-badge">Generator Tool</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>Staff CV Generator</h3>
+                        <div class="company-sub">Computer Application Development</div>
+                        <p>Developed a responsive web-based Staff CV Generator that allows users to create professional CVs through an intuitive form interface. The application automatically formats user information into a polished resume layout, making CV creation fast, simple, and user-friendly.</p>
+
+                        <!-- <div class="tech-tags" style="margin-top: 1rem;">
+                            <span class="tag">Video Editing</span>
+                            <span class="tag">Graphic Design</span>
+                            <span class="tag">Animation</span>
+                            <span class="tag">Branding</span>
+                        </div> -->
+
+                        <div style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <!-- <a href="https://www.youtube.com/watch?v=p8bMwGn8rG4" target="_blank" rel="noopener" class="btn-project primary interactable"><i class="fas fa-play"></i> Watch Now</a> -->
+                            <button type="button" class="btn-project btn-details interactable" data-project="3"><i class="fas fa-info-circle"></i> Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="skills-section" id="skills">
+            <span class="section-tag">// COMPETENCIES</span>
+            <h2 class="section-title">Skills & Languages</h2>
+
+            <div class="skills-grid">
+                <div class="skill-card interactable">
+                    <i class="fas fa-laptop-code skill-icon"></i>
+                    <h3>Technical & Development</h3>
+                    <p>Building responsive web solutions, managing content structures, and styling digital interfaces.</p>
+                    <div class="tech-tags">
+                        <span class="tag">Web Development</span>
+                        <span class="tag">Programming Languages</span>
+                        <span class="tag">Frameworks & Platforms</span>
+                        <span class="tag">UI/UX Design</span>
+                        <span class="tag">Tools & Software</span>
+                    </div>
+                </div>
+
+                <div class="skill-card interactable">
+                    <i class="fas fa-users skill-icon"></i>
+                    <h3>Professional & Soft Skills</h3>
+                    <p>Collaborative problem solving and quick adaptability in dynamic work settings.</p>
+                    <div class="tech-tags">
+                        <span class="tag">Problem-Solving</span>
+                        <span class="tag">Critical Thinking</span>
+                        <span class="tag">Communication</span>
+                        <span class="tag">Teamwork</span>
+                        <span class="tag">Quick Learning</span>
+                    </div>
+                </div>
+
+                <div class="skill-card interactable">
+                    <i class="fas fa-language skill-icon"></i>
+                    <h3>Languages</h3>
+                    <p>Proficient communication skills for collaborative and multi-cultural workplace environments.</p>
+                    <div class="tech-tags">
+                        <span class="tag">Malay (Fluent)</span>
+                        <span class="tag">English (Proficient)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Timeline -->
+        <section id="education">
+            <span class="section-tag">// ACADEMIC PATHWAY</span>
+            <h2 class="section-title">Education</h2>
+
+            <div class="timeline-container">
+
+                <div class="timeline-item">
+                    <div class="timeline-date">[ 2021 - 2024 ]</div>
+                    <div class="timeline-role">Diploma in Computer Sciences</div>
+                    <div class="timeline-company">Universiti Poly-Tech Malaysia (UPTM)</div>
+                    <div class="timeline-desc">Graduated with a <strong>3.5 GPA</strong>. Gained foundational training in programming, database concepts, web design, and system logic.</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">[ 2019 - 2020 ]</div>
+                    <div class="timeline-role">Sijil Pembelajaran Malaysia (SPM)</div>
+                    <div class="timeline-company">SMK Taman Tasik - Tasek Tambahan</div>
+                    <div class="timeline-desc" style="padding-left: 20px;">
+                        <ul>
+                            <li>Math : <strong>A</strong></li>
+                            <li>Science : <strong></strong>B+</strong></li>
+                            <li>Computer Science : <strong>B</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA Section -->
+        <section id="contact">
+            <div class="cta-box">
+                <span class="section-tag">// REACH OUT</span>
+                <h2 class="section-title" style="margin-bottom: 0.75rem;">Let's Work Together</h2>
+                <p class="cta-subtitle">Currently available for part-time or full-time opportunities for the next 4–5 months.</p>
+                
+                <!-- <a href="mailto:hassanhazril@gmail.com" class="btn-bracket interactable">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> SEND EMAIL
+                </a> -->
+
+                <div class="contact-grid">
+                    <!-- Email Card -->
+                    <a href="mailto:hassanhazril@gmail.com" class="contact-card interactable">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="label">Email</span>
+                            <span class="value">hassanhazril@gmail.com</span>
+                        </div>
+                    </a>
+
+                    <!-- Phone Card -->
+                    <a href="tel:+60179069607" class="contact-card interactable">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="label">Phone</span>
+                            <span class="value">+6017-906 9607</span>
+                        </div>
+                    </a>
+
+                    <!-- Location Card -->
+                    <div class="contact-card interactable">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="label">Location</span>
+                            <span class="value">Ampang, Selangor</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PROJECT DETAILS POPUP MODAL (SPLIT LAYOUT WITH SLIDER) -->
+    <div id="project-modal" class="modal">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-container" data-lenis-prevent>
+            <button class="modal-close interactable" id="modal-close" aria-label="Close Modal">&times;</button>
+
+            <div class="modal-grid">
+                <!-- LEFT COLUMN: PROJECT DETAILS -->
+                <div class="modal-details-col">
+                    <div class="modal-header">
+                        <span class="project-badge" id="modal-badge">Category</span>
+                        <h2 id="modal-title">Project Title</h2>
+                        <div class="company-sub" id="modal-subtitle">Sub/Company Name</div>
+                    </div>
+
+                    <div class="modal-body">
+                        <p id="modal-description">Detailed description goes here...</p>
+                        
+                        <h4 class="modal-subheading">// KEY HIGHLIGHTS & FEATURES</h4>
+                        <ul id="modal-highlights" class="modal-list">
+                            <!-- Dynamic Highlights -->
+                        </ul>
+
+                        <h4 class="modal-subheading">// TECHNOLOGIES USED</h4>
+                        <div class="tech-tags" id="modal-tags">
+                            <!-- Dynamic Tags -->
+                        </div>
+                    </div>
+
+                    <div class="modal-footer" id="modal-footer">
+                        <!-- Dynamic Action Buttons -->
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: IMAGE SCREENSHOT SLIDER -->
+                <div class="modal-slider-col">
+                    <h4 class="modal-subheading" style="margin-top: 0;">// INTERFACE PREVIEW</h4>
+                    <div class="slider-wrapper">
+                        <div class="slider-display" id="slider-display">
+                            <img id="slider-img" src="" alt="Project Screenshot Preview">
+                            
+                            <!-- Slider Navigation Controls -->
+                            <button type="button" class="slider-btn prev interactable" id="slider-prev" aria-label="Previous screenshot">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button type="button" class="slider-btn next interactable" id="slider-next" aria-label="Next screenshot">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
+                            <div class="slider-counter" id="slider-counter">1 / 1</div>
+                        </div>
+                        
+                        <!-- Navigation Dots -->
+                        <div class="slider-dots" id="slider-dots">
+                            <!-- Dynamic Dots Injected Here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // PROJECT POPUP MODAL & AUTO-SLIDING IMAGE CAROUSEL
+        // =========================================================
+        const projectDetailsData = [
+            {
+                badge: "Live Production",
+                title: "Official FCOM Faculty Website",
+                subtitle: "Faculty of Computing & Multimedia (FCOM), UPTM",
+                description: "Designed, engineered, and deployed the official web portal for UPTM's Faculty of Computing & Multimedia. Built to provide an accessible interface for students, faculty members, and external visitors.",
+                highlights: [
+                    "Designed and implemented responsive mobile-first UI layouts.",
+                    "Integrated high-resolution multimedia content, faculty event banners, and announcement sections.",
+                    "Collaborated directly with faculty administration to organize course information logically.",
+                    "Optimized cross-browser compatibility and component loading speeds."
+                ],
+                tags: ["HTML5", "CSS3", "JavaScript", "PHP", "Font Awesome (v6.6.0)", "Google Fonts"],
+                links: [
+                    { label: "Live Site", url: "https://fcom.uptm.edu.my/", icon: "fas fa-external-link-alt", primary: true }
+                ],
+                screenshots: [
+                    "fcomSS1.png",
+                    "fcomSS2.png",
+                    "fcomSS3.png"
+                ]
+            },
+            {
+                badge: "Employee Attendance Tracking",
+                title: "Hemzal Staff Portal",
+                subtitle: "Full-Stack Internal Workforce Management System",
+                description: "The Hemzal Staff Portal (Hemzal Crispy Internal Staff Portal) is a mobile-first workforce management application built to streamline clock-in/out workflows, sales reporting, and administrative oversights.",
+                highlights: [
+                    "Real-time attendance tracking with instant Firebase cloud database integration.",
+                    "Interactive analytics charts using Chart.js to monitor employee productivity metrics.",
+                    "Integrated PDF generation (jsPDF) and Excel data export (SheetJS) for payroll reporting.",
+                    "Built with dual access controls separating Staff tasks from Admin management tools."
+                ],
+                tags: ["HTML5", "CSS3", "Vanilla JavaScript", "Firebase JS SDK", "Chart.js", "SheetJS", "jsPDF & AutoTable"],
+                links: [
+                    { label: "Staff Role", url: "https://hemzalstaffportal.vercel.app/", icon: "fas fa-laptop-code", primary: true },
+                    { label: "Admin Role", url: "https://hemzal-staff-management-system.vercel.app/", icon: "fas fa-user-shield", primary: true }
+                ],
+                screenshots: [
+                    "hemzalTumnel.png"
+                ]
+            },
+            {
+                badge: "Academic Project",
+                title: "Student Portal & Progress Tracker",
+                subtitle: "Computer Application Development",
+                description: "Developed a responsive web-based Staff CV Generator that allows users to create professional CVs through an intuitive form interface. The application automatically formats user information into a polished resume layout, making CV creation fast, simple, and user-friendly.",
+                highlights: [
+                    "GPA and CGPA estimation calculator based on customizable credit units.",
+                    "Module tracking board with structured task checklists and completion rates.",
+                    "Integrated REST API endpoints for seamless asynchronous data saving.",
+                    "Styled with Tailwind CSS for clean dark mode user experience."
+                ],
+                tags: ["JavaScript", "REST API", "Tailwind CSS", "Database Design"],
+                links: [
+                    { label: "View Project", url: "#", icon: "fas fa-external-link-alt", primary: true },
+                    { label: "Repository", url: "#", icon: "fab fa-github", primary: false }
+                ],
+                screenshots: [
+                    "CVSS1.png"
+                ]
+            },
+            {
+                badge: "Generator Tool",
+                title: "Staff CV Generator",
+                subtitle: "Computer Application Development",
+                description: "Developed a responsive web-based Staff CV Generator that allows users to create professional CVs through an intuitive form interface. The application automatically formats user information into a polished resume layout, making CV creation fast, simple, and user-friendly.",
+                highlights: [
+                    "User-friendly CV input form with real-time validation and error handling.",
+                    "Automatic professional CV generation with downloadable PDF output.",
+                    "Real-time preview of CV layout with dynamic content rendering.",
+                    "Responsive design for desktop and mobile devices, ensuring accessibility for all users."
+                ],
+                tags: ["HTML5", "CSS3", "JavaScript", "Responsive Web Design", "PDF Generation", "Form Validation", "Vercel (Deployment)"],
+                links: [
+                    { label: "View Project", url: "https://staff-cv-generator.netlify.app/", icon: "fas fa-play", primary: true }
+                ],
+                screenshots: [
+                    "CVSS1.png",
+                    "CVSS2.png",
+                    "CVSS3.png"
+                ]
+            }
+        ];
+
+        // =========================================================
+        // COMPLETE & CRASH-PROOF SPLASH SCREEN SCRIPT
+        // =========================================================
+        (function () {
+            function initSplashScreen() {
+                const splashScreen = document.getElementById('splash-screen');
+                const splashProgress = document.getElementById('splash-progress');
+                const splashPercent = document.getElementById('splash-percent');
+                const splashStatusText = document.getElementById('splash-status-text');
+
+                // Exit if splash screen doesn't exist on page
+                if (!splashScreen) return;
+
+                // Lock body scrolling
+                document.body.style.overflow = 'hidden';
+                if (typeof lenis !== 'undefined' && lenis.stop) {
+                    try { lenis.stop(); } catch (e) { console.warn(e); }
+                }
+
+                // 🔥 Flag defined inside function scope to prevent ReferenceError
+                let isRemoved = false;
+
+                function dismissSplash() {
+                    if (isRemoved) return;
+                    isRemoved = true;
+
+                    // 1. Hide splash screen overlay
+                    splashScreen.classList.add('hidden');
+                    document.body.style.overflow = '';
+
+                    // 2. Trigger fadeUp animations across the site
+                    document.body.classList.add('splash-done');
+
+                    // 3. Resume Lenis smooth scroll if present
+                    if (typeof lenis !== 'undefined' && lenis.start) {
+                        try { lenis.start(); } catch (e) { console.warn(e); }
+                    }
+
+                    // 4. Remove completely from layout after fade
+                    setTimeout(() => {
+                        splashScreen.style.display = 'none';
+                    }, 600);
+                }
+
+                // Fail-safe emergency fallback timer (3.5 seconds)
+                const emergencyTimeout = setTimeout(dismissSplash, 3500);
+
+                const statusMessages = [
+                    "INITIALIZING_ENVIRONMENT...",
+                    "LOADING_STYLING_MODULES...",
+                    "CONNECTING_TO_DATABASE...",
+                    "COMPILING_PORTFOLIO_ASSETS...",
+                    "ACCESS_GRANTED."
+                ];
+
+                let progress = 0;
+                let messageIndex = 0;
+
+                const progressInterval = setInterval(() => {
+                    progress += Math.floor(Math.random() * 12) + 6;
+                    if (progress > 100) progress = 100;
+
+                    if (splashProgress) splashProgress.style.width = `${progress}%`;
+                    if (splashPercent) splashPercent.textContent = `${progress}%`;
+
+                    if (splashStatusText) {
+                        if (progress >= 20 && messageIndex === 0) { messageIndex = 1; splashStatusText.textContent = statusMessages[1]; }
+                        else if (progress >= 45 && messageIndex === 1) { messageIndex = 2; splashStatusText.textContent = statusMessages[2]; }
+                        else if (progress >= 75 && messageIndex === 2) { messageIndex = 3; splashStatusText.textContent = statusMessages[3]; }
+                        else if (progress >= 95 && messageIndex === 3) { messageIndex = 4; splashStatusText.textContent = statusMessages[4]; }
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        clearTimeout(emergencyTimeout);
+                        setTimeout(dismissSplash, 250);
+                    }
+                }, 70);
+            }
+
+            // Run script immediately if DOM is ready
+            if (document.readyState === 'interactive' || document.readyState === 'complete') {
+                initSplashScreen();
+            } else {
+                document.addEventListener('DOMContentLoaded', initSplashScreen);
+            }
+        })();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // --------------------------------------------------
+            // 1. SLIDE DATA & SYSTEM STATE
+            // --------------------------------------------------
+            const slides = [
+                {
+                    subtitle: "Diploma in Computer Science & Web Systems",
+                    title: "Web & App<br>Developer",
+                    terminalContent: `
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> whoami</div>
+                            <div class="terminal-response">UPTM FCOM Graduate | Web & Software Developer.</div>
+                        </div>
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> cat education.json</div>
+                            <div class="terminal-response">Diploma in Computer Science (Faculty of Computing & Multimedia, UPTM).</div>
+                        </div>
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> cat philosophy.txt</div>
+                            <div class="terminal-response philosophy">"Transforming academic knowledge into real-world applications — from internal staff portals to live faculty websites."</div>
+                        </div>
+                        <div class="terminal-status"><span class="status-arrow">▶</span> Developer environment online. Type commands below.</div>
+                        <div class="terminal-divider"></div>
+                        <div class="terminal-input-line">
+                            <span class="prompt">$</span>
+                            <input type="text" class="terminal-input" placeholder="type 'help', 'skills', or 'projects'..." />
+                        </div>
+                    `
+                },
+                {
+                    subtitle: "Frontend Engineering & Visual Arts",
+                    title: "Frontend &<br>UI Design",
+                    terminalContent: `
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> fetch --frontend-stack</div>
+                            <div class="terminal-response">HTML5, CSS3, Vanilla JavaScript (ES6+), Tailwind CSS, Chart.js.</div>
+                        </div>
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> git log --oneline -n 1</div>
+                            <div class="terminal-response">f8a2910 feat: built & deployed official UPTM FCOM Faculty website</div>
+                        </div>
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> fetch --multimedia</div>
+                            <div class="terminal-response">Video Editing, Motion Graphics, Custom Vector Branding & Visual Assets.</div>
+                        </div>
+                        <div class="terminal-status"><span class="status-arrow">▶</span> Responsive UI & Asset Engine Ready.</div>
+                        <div class="terminal-divider"></div>
+                        <div class="terminal-input-line">
+                            <span class="prompt">$</span>
+                            <input type="text" class="terminal-input" placeholder="type 'help', 'skills', or 'projects'..." />
+                        </div>
+                    `
+                },
+                {
+                    subtitle: "Backend Services, Cloud & Analytics",
+                    title: "Full-Stack &<br>Cloud Tools",
+                    terminalContent: `
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> fetch --backend-stack</div>
+                            <div class="terminal-response">PHP, Firebase SDK, RESTful APIs, Database Design, SheetJS & jsPDF.</div>
+                        </div>
+                        <div class="terminal-group">
+                            <div class="terminal-command"><span class="prompt">$</span> system --showcase</div>
+                            <div class="terminal-response">Hemzal Staff Portal | Live Attendance, Realtime Firebase Sync & PDF Reporting.</div>
+                        </div>
+                        <div class="terminal-status"><span class="status-arrow">▶</span> Cloud Backends & Production Deployments Operational.</div>
+                        <div class="terminal-divider"></div>
+                        <div class="terminal-input-line">
+                            <span class="prompt">$</span>
+                            <input type="text" class="terminal-input" placeholder="type 'help', 'skills', or 'projects'..." />
+                        </div>
+                    `
+                }
+            ];
+
+            const titleEl = document.getElementById('hero-title');
+            const subtitleEl = document.getElementById('hero-subtitle');
+            const terminalBody = document.getElementById('terminal-body');
+            const terminalCard = document.getElementById('parallax-img');
+            const paginationItems = document.querySelectorAll('.hero-pagination span');
+
+            let currentSlide = 0;
+            let slideInterval;
+            const AUTO_PLAY_DELAY = 5000;
+
+            // --------------------------------------------------
+            // 2. SLIDE SWITCHER & AUTOPLAY
+            // --------------------------------------------------
+            function switchSlide(index) {
+                currentSlide = index;
+                const targetSlide = slides[index];
+
+                paginationItems.forEach(item => item.classList.remove('active'));
+                paginationItems[index].classList.add('active');
+
+                // Animate Out
+                terminalCard.style.opacity = '0';
+                titleEl.style.opacity = '0';
+                titleEl.style.transform = 'translateY(15px)';
+                subtitleEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    titleEl.innerHTML = targetSlide.title;
+                    subtitleEl.textContent = targetSlide.subtitle;
+                    terminalBody.innerHTML = targetSlide.terminalContent;
+
+                    bindTerminalInput();
+
+                    // Animate In
+                    terminalCard.style.opacity = '1';
+                    titleEl.style.opacity = '1';
+                    titleEl.style.transform = 'translateY(0)';
+                    subtitleEl.style.opacity = '1';
+                }, 350);
+            }
+
+            function startAutoPlay() {
+                slideInterval = setInterval(() => {
+                    const nextIndex = (currentSlide + 1) % slides.length;
+                    switchSlide(nextIndex);
+                }, AUTO_PLAY_DELAY);
+            }
+
+            function resetAutoPlay() {
+                clearInterval(slideInterval);
+                startAutoPlay();
+            }
+
+            paginationItems.forEach((item) => {
+                item.addEventListener('click', (e) => {
+                    const slideIndex = parseInt(e.target.getAttribute('data-slide'));
+                    switchSlide(slideIndex);
+                    resetAutoPlay();
+                });
+            });
+
+            startAutoPlay();
+            switchSlide(0);
+
+            // --------------------------------------------------
+            // 3. INTERACTIVE TERMINAL COMMAND INPUT
+            // --------------------------------------------------
+            function bindTerminalInput() {
+                const input = document.querySelector('.terminal-input');
+                if (!input) return;
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        const cmd = input.value.trim().toLowerCase();
+                        input.value = '';
+                        
+                        let responseText = "";
+                        if (cmd === 'help') {
+                            responseText = "Available commands: 'skills', 'contact', 'clear'";
+                        } else if (cmd === 'skills') {
+                            responseText = "Skills: Node.js, Go, PostgreSQL, AWS, React, Docker";
+                        } else if (cmd === 'contact') {
+                            responseText = "Email: alex@example.com | Twitter: @alexmorgan";
+                        } else if (cmd === 'clear') {
+                            switchSlide(currentSlide);
+                            return;
+                        } else {
+                            responseText = `Command not recognized: '${cmd}'. Type 'help' for options.`;
+                        }
+
+                        const responseDiv = document.createElement('div');
+                        responseDiv.className = 'terminal-group';
+                        responseDiv.innerHTML = `
+                            <div class="terminal-command"><span class="prompt">$</span> ${cmd}</div>
+                            <div class="terminal-response">${responseText}</div>
+                        `;
+                        terminalBody.insertBefore(responseDiv, input.parentElement);
+                    }
+                });
+            }
+
+            // --------------------------------------------------
+            // 4. ADVANCED CYBER CURSOR ENGINE
+            // --------------------------------------------------
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorRing = document.getElementById('cursor-ring');
+
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let ringX = mouseX;
+            let ringY = mouseY;
+            const speed = 0.18; // Follow lag speed
+            let lastParticleTime = 0;
+
+            // 1. Smooth Interpolation Animation Loop
+            function animateCursor() {
+                ringX += (mouseX - ringX) * speed;
+                ringY += (mouseY - ringY) * speed;
+                
+                cursorRing.style.left = `${ringX}px`;
+                cursorRing.style.top = `${ringY}px`;
+                
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // 2. Mouse Move & Particle Spawn
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                cursorDot.style.left = `${mouseX}px`;
+                cursorDot.style.top = `${mouseY}px`;
+                
+                // Parallax effect on terminal card
+                if (terminalCard) {
+                    const xVal = (mouseX - window.innerWidth / 2) / 45;
+                    const yVal = (mouseY - window.innerHeight / 2) / 45;
+                    terminalCard.style.transform = `translate3d(${-xVal}px, ${-yVal}px, 0)`;
+                }
+
+                // Spawn trail particles (throttled for performance)
+                const now = Date.now();
+                if (now - lastParticleTime > 45) { 
+                    createParticle(mouseX, mouseY);
+                    lastParticleTime = now;
+                }
+            });
+
+            // Particle Spawners
+            function createParticle(x, y) {
+                const particle = document.createElement('div');
+                particle.className = 'cursor-particle';
+                const size = Math.random() * 4 + 3; // 3px - 7px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                document.body.appendChild(particle);
+
+                setTimeout(() => particle.remove(), 500);
+            }
+
+            // 3. Click Shockwave Effect
+            window.addEventListener('mousedown', (e) => {
+                const ripple = document.createElement('div');
+                ripple.className = 'cursor-ripple';
+                ripple.style.left = `${e.clientX}px`;
+                ripple.style.top = `${e.clientY}px`;
+                document.body.appendChild(ripple);
+
+                setTimeout(() => ripple.remove(), 500);
+            });
+
+            // 4. Dynamic Hover Event Listeners
+            function bindHoverEvents() {
+                const interactables = document.querySelectorAll('.interactable, .btn-bracket, .btn-project, a, button, input');
+                
+                interactables.forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        cursorRing.classList.add('hovered');
+                        cursorDot.classList.add('hovered');
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursorRing.classList.remove('hovered');
+                        cursorDot.classList.remove('hovered');
+                    });
+                });
+            }
+            bindHoverEvents();
+
+            // --------------------------------------------------
+            // 5. NAVBAR ACTIVE STATE & SCROLLSPY
+            // --------------------------------------------------
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const sections = document.querySelectorAll('section[id]');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            const observerOptions = {
+                threshold: 0.3
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+
+            // --------------------------------------------------
+            // LENIS SMOOTH SCROLL ENGINE
+            // --------------------------------------------------
+            const lenis = new Lenis({
+                duration: 1.2, // Smoothness duration (higher = silkier)
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Natural deceleration physics
+                smoothWheel: true,
+                touchMultiplier: 1.5,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            // Intercept local anchors to use Lenis smooth scrollTo
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        lenis.scrollTo(targetElement, { offset: -30 });
+                    }
+                });
+            });
+
+            // Modal Elements
+            const modal = document.getElementById('project-modal');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalClose = document.getElementById('modal-close');
+            const modalBadge = document.getElementById('modal-badge');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSubtitle = document.getElementById('modal-subtitle');
+            const modalDescription = document.getElementById('modal-description');
+            const modalHighlights = document.getElementById('modal-highlights');
+            const modalTags = document.getElementById('modal-tags');
+            const modalFooter = document.getElementById('modal-footer');
+
+            // Slider Elements
+            const sliderWrapper = document.querySelector('.slider-wrapper');
+            const sliderImg = document.getElementById('slider-img');
+            const sliderPrev = document.getElementById('slider-prev');
+            const sliderNext = document.getElementById('slider-next');
+            const sliderCounter = document.getElementById('slider-counter');
+            const sliderDots = document.getElementById('slider-dots');
+
+            let currentProjectScreenshots = [];
+            let currentSlideIndex = 0;
+            let autoSlideInterval = null;
+            const AUTO_SLIDE_SPEED = 3500; // 3.5 seconds per slide
+
+            function updateSliderDisplay() {
+                if (!currentProjectScreenshots.length) return;
+
+                // Image cross-fade effect
+                sliderImg.style.opacity = '0.2';
+                sliderImg.style.transform = 'scale(0.97)';
+                
+                setTimeout(() => {
+                    sliderImg.src = currentProjectScreenshots[currentSlideIndex];
+                    sliderImg.style.opacity = '1';
+                    sliderImg.style.transform = 'scale(1)';
+                }, 150);
+
+                // Counter text update
+                sliderCounter.textContent = `${currentSlideIndex + 1} / ${currentProjectScreenshots.length}`;
+
+                // Active dot update
+                const dots = sliderDots.querySelectorAll('.slider-dot');
+                dots.forEach((dot, idx) => {
+                    if (idx === currentSlideIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+
+                // Toggle nav controls visibility if 1 image vs multiple
+                if (currentProjectScreenshots.length <= 1) {
+                    sliderPrev.style.display = 'none';
+                    sliderNext.style.display = 'none';
+                    sliderDots.style.display = 'none';
+                    sliderCounter.style.display = 'none';
+                } else {
+                    sliderPrev.style.display = 'flex';
+                    sliderNext.style.display = 'flex';
+                    sliderDots.style.display = 'flex';
+                    sliderCounter.style.display = 'block';
+                }
+            }
+
+            // AUTO-SLIDE TIMER CONTROLS
+            function startAutoSlide() {
+                stopAutoSlide();
+                if (currentProjectScreenshots.length > 1) {
+                    autoSlideInterval = setInterval(() => {
+                        currentSlideIndex = (currentSlideIndex + 1) % currentProjectScreenshots.length;
+                        updateSliderDisplay();
+                    }, AUTO_SLIDE_SPEED);
+                }
+            }
+
+            function stopAutoSlide() {
+                if (autoSlideInterval) {
+                    clearInterval(autoSlideInterval);
+                    autoSlideInterval = null;
+                }
+            }
+
+            function nextSlide() {
+                currentSlideIndex = (currentSlideIndex + 1) % currentProjectScreenshots.length;
+                updateSliderDisplay();
+                startAutoSlide(); // Reset auto-slide timer
+            }
+
+            function prevSlide() {
+                currentSlideIndex = (currentSlideIndex - 1 + currentProjectScreenshots.length) % currentProjectScreenshots.length;
+                updateSliderDisplay();
+                startAutoSlide(); // Reset auto-slide timer
+            }
+
+            function initSlider(screenshots) {
+                currentProjectScreenshots = screenshots && screenshots.length ? screenshots : ['fcomWeb.png'];
+                currentSlideIndex = 0;
+
+                // Generate Dots
+                sliderDots.innerHTML = currentProjectScreenshots
+                    .map((_, idx) => `<span class="slider-dot interactable ${idx === 0 ? 'active' : ''}" data-index="${idx}"></span>`)
+                    .join('');
+
+                // Dot click handlers
+                sliderDots.querySelectorAll('.slider-dot').forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        currentSlideIndex = parseInt(e.target.getAttribute('data-index'), 10);
+                        updateSliderDisplay();
+                        startAutoSlide();
+                    });
+                });
+
+                updateSliderDisplay();
+                startAutoSlide();
+            }
+
+            // Slider Buttons
+            sliderNext.addEventListener('click', nextSlide);
+            sliderPrev.addEventListener('click', prevSlide);
+
+            // Pause auto-play when user hovers over the slider
+            if (sliderWrapper) {
+                sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
+                sliderWrapper.addEventListener('mouseleave', () => {
+                    if (modal.classList.contains('active')) startAutoSlide();
+                });
+            }
+
+            function openModal(index) {
+                const data = projectDetailsData[index];
+                if (!data) return;
+
+                modalBadge.textContent = data.badge;
+                modalTitle.textContent = data.title;
+                modalSubtitle.textContent = data.subtitle;
+                modalDescription.textContent = data.description;
+
+                modalHighlights.innerHTML = data.highlights
+                    .map(item => `<li><i class="fas fa-check-circle" style="color: var(--accent); margin-top: 3px;"></i> <span>${item}</span></li>`)
+                    .join('');
+
+                modalTags.innerHTML = data.tags
+                    .map(tag => `<span class="tag">${tag}</span>`)
+                    .join('');
+
+                modalFooter.innerHTML = data.links
+                    .map(link => `
+                        <a href="${link.url}" ${link.url !== '#' ? 'target="_blank" rel="noopener"' : ''} class="btn-project ${link.primary ? 'primary' : ''} interactable">
+                            <i class="${link.icon}"></i> ${link.label}
+                        </a>
+                    `)
+                    .join('');
+
+                initSlider(data.screenshots);
+
+                modal.classList.add('active');
+
+                if (typeof lenis !== 'undefined') lenis.stop();
+            }
+
+            function closeModal() {
+                stopAutoSlide(); // Clean up interval when modal is closed
+                modal.classList.remove('active');
+                if (typeof lenis !== 'undefined') lenis.start();
+            }
+
+            document.querySelectorAll('.btn-details').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.currentTarget.getAttribute('data-project');
+                    openModal(index);
+                });
+            });
+
+            modalClose.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', closeModal);
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
